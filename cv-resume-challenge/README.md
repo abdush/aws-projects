@@ -36,3 +36,22 @@ After adding bucket policy which GetObject for all, now we get 404 when accessin
 
 TODO: 
 If you don't want to disable block public access settings for your bucket but you still want your website to be public, you can create a Amazon CloudFront distribution to serve your static website
+
+## CloudFront distribution
+
+create CF OAC and CF distribution to access s3 bucket. We can block public access to bucket and update bucket policy to only allow access from OAC
+
+required config are for 
+- origin (s3 bucket id, domain name, and OAC id) - before you have to create OAC resource with type s3.
+- default cache behaviour: this references AWS managed cache optimized policy
+- viewer certificate: default certificate provided by AWS which supports HTTPS connections using CF domain name (doesn't support custom domains - for that we need to create certificate in ACM and reference here)
+
+We update the bucket policy to allow read access only from CF service matching our created distribution arn
+The deployment for CF takes some time | 5mins.
+
+Now if we test access from s3 endpoint we should get 403. We can only access through CF domain (ex. https://d18mhgp0szxckk.cloudfront.net/)
+
+## Register domain name
+
+You can either use Route53 or another domain registrar to buy a new domain. In this case I have used namecheap to register domain ahussein.pro for about $4 for first year.
+Next is to create Route53 hosted zone with the same domain name and then add a record of type A (Alias) which points the domain name to our cloudfront domain name. Once this is done we need to get the route53 name servers for our hosted zone and update those in our namecheap DNS service.

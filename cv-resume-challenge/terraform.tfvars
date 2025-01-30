@@ -1,2 +1,2 @@
-domain_name  = "yourdomain.com"
+domain_name  = "ahussein.pro"
 bucket_name  = "ahussein-resume.com"
