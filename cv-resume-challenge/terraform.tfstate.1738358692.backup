@@ -1,7 +1,7 @@
 {
   "version": 4,
   "terraform_version": "1.10.4",
-  "serial": 42,
+  "serial": 25,
   "lineage": "36a1980d-14c6-0d2d-4c73-98dd9dfb9af6",
   "outputs": {
     "cloudfront_domain_name": {
@@ -55,7 +55,7 @@
         {
           "schema_version": 0,
           "attributes": {
-            "arn": "arn:aws:acm:us-east-1:051826735393:certificate/79a4f08c-6bce-4c61-86dc-c1fbde703498",
+            "arn": "arn:aws:acm:us-east-1:051826735393:certificate/2bb90df5-7840-4f71-bfb8-4da24a599d1e",
             "certificate_authority_arn": "",
             "certificate_body": null,
             "certificate_chain": null,
@@ -66,16 +66,10 @@
                 "resource_record_name": "_6c5daa4a8ef81e774525ae25a07d7c23.ahussein.pro.",
                 "resource_record_type": "CNAME",
                 "resource_record_value": "_2ce1393c3fdff6321cc56a002798d240.zfyfvmchrl.acm-validations.aws."
-              },
-              {
-                "domain_name": "ahussein.pro",
-                "resource_record_name": "_6c5daa4a8ef81e774525ae25a07d7c23.ahussein.pro.",
-                "resource_record_type": "CNAME",
-                "resource_record_value": "_2ce1393c3fdff6321cc56a002798d240.zfyfvmchrl.acm-validations.aws."
               }
             ],
             "early_renewal_duration": "",
-            "id": "arn:aws:acm:us-east-1:051826735393:certificate/79a4f08c-6bce-4c61-86dc-c1fbde703498",
+            "id": "arn:aws:acm:us-east-1:051826735393:certificate/2bb90df5-7840-4f71-bfb8-4da24a599d1e",
             "key_algorithm": "RSA_2048",
             "not_after": "",
             "not_before": "",
@@ -90,8 +84,7 @@
             "renewal_summary": [],
             "status": "PENDING_VALIDATION",
             "subject_alternative_names": [
-              "*.ahussein.pro",
-              "ahussein.pro"
+              "*.ahussein.pro"
             ],
             "tags": {
               "Environment": "Dev",
@@ -116,32 +109,6 @@
           ],
           "private": "bnVsbA==",
           "create_before_destroy": true
-        }
-      ]
-    },
-    {
-      "mode": "managed",
-      "type": "aws_acm_certificate_validation",
-      "name": "cert_validation",
-      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us-east-1",
-      "instances": [
-        {
-          "schema_version": 0,
-          "attributes": {
-            "certificate_arn": "arn:aws:acm:us-east-1:051826735393:certificate/79a4f08c-6bce-4c61-86dc-c1fbde703498",
-            "id": "2025-01-31 22:39:18.658 +0000 UTC",
-            "timeouts": null,
-            "validation_record_fqdns": [
-              "_6c5daa4a8ef81e774525ae25a07d7c23.ahussein.pro"
-            ]
-          },
-          "sensitive_attributes": [],
-          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo0NTAwMDAwMDAwMDAwfX0=",
-          "dependencies": [
-            "aws_acm_certificate.cert",
-            "aws_route53_record.cert_validation",
-            "aws_route53_zone.website_zone"
-          ]
         }
       ]
     },
@@ -194,13 +161,13 @@
             "default_root_object": "index.html",
             "domain_name": "d18mhgp0szxckk.cloudfront.net",
             "enabled": true,
-            "etag": "E2608USF577VFA",
+            "etag": "E199GCSAEJBGQF",
             "hosted_zone_id": "Z2FDTNDATAQYW2",
             "http_version": "http2",
             "id": "E2BCA282ANQ7EC",
             "in_progress_validation_batches": 0,
             "is_ipv6_enabled": true,
-            "last_modified_time": "2025-01-31 22:42:03.228 +0000 UTC",
+            "last_modified_time": "2025-01-25 20:43:51.463 +0000 UTC",
             "logging_config": [],
             "ordered_cache_behavior": [],
             "origin": [
@@ -253,7 +220,7 @@
             ],
             "viewer_certificate": [
               {
-                "acm_certificate_arn": "arn:aws:acm:us-east-1:051826735393:certificate/79a4f08c-6bce-4c61-86dc-c1fbde703498",
+                "acm_certificate_arn": "arn:aws:acm:us-east-1:051826735393:certificate/2bb90df5-7840-4f71-bfb8-4da24a599d1e",
                 "cloudfront_default_certificate": false,
                 "iam_certificate_id": "",
                 "minimum_protocol_version": "TLSv1.2_2021",
@@ -267,10 +234,7 @@
           "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ==",
           "dependencies": [
             "aws_acm_certificate.cert",
-            "aws_acm_certificate_validation.cert_validation",
             "aws_cloudfront_origin_access_control.oac",
-            "aws_route53_record.cert_validation",
-            "aws_route53_zone.website_zone",
             "aws_s3_bucket.website_bucket"
           ]
         }
@@ -295,76 +259,6 @@
           },
           "sensitive_attributes": [],
           "private": "bnVsbA=="
-        }
-      ]
-    },
-    {
-      "mode": "managed",
-      "type": "aws_route53_record",
-      "name": "cert_validation",
-      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
-      "instances": [
-        {
-          "index_key": "*.ahussein.pro",
-          "schema_version": 2,
-          "attributes": {
-            "alias": [],
-            "allow_overwrite": true,
-            "cidr_routing_policy": [],
-            "failover_routing_policy": [],
-            "fqdn": "_6c5daa4a8ef81e774525ae25a07d7c23.ahussein.pro",
-            "geolocation_routing_policy": [],
-            "health_check_id": "",
-            "id": "Z00048744ZWVWIUZ7P1__6c5daa4a8ef81e774525ae25a07d7c23.ahussein.pro._CNAME",
-            "latency_routing_policy": [],
-            "multivalue_answer_routing_policy": false,
-            "name": "_6c5daa4a8ef81e774525ae25a07d7c23.ahussein.pro",
-            "records": [
-              "_2ce1393c3fdff6321cc56a002798d240.zfyfvmchrl.acm-validations.aws."
-            ],
-            "set_identifier": "",
-            "ttl": 60,
-            "type": "CNAME",
-            "weighted_routing_policy": [],
-            "zone_id": "Z00048744ZWVWIUZ7P1"
-          },
-          "sensitive_attributes": [],
-          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
-          "dependencies": [
-            "aws_acm_certificate.cert",
-            "aws_route53_zone.website_zone"
-          ]
-        },
-        {
-          "index_key": "ahussein.pro",
-          "schema_version": 2,
-          "attributes": {
-            "alias": [],
-            "allow_overwrite": true,
-            "cidr_routing_policy": [],
-            "failover_routing_policy": [],
-            "fqdn": "_6c5daa4a8ef81e774525ae25a07d7c23.ahussein.pro",
-            "geolocation_routing_policy": [],
-            "health_check_id": "",
-            "id": "Z00048744ZWVWIUZ7P1__6c5daa4a8ef81e774525ae25a07d7c23.ahussein.pro._CNAME",
-            "latency_routing_policy": [],
-            "multivalue_answer_routing_policy": false,
-            "name": "_6c5daa4a8ef81e774525ae25a07d7c23.ahussein.pro",
-            "records": [
-              "_2ce1393c3fdff6321cc56a002798d240.zfyfvmchrl.acm-validations.aws."
-            ],
-            "set_identifier": "",
-            "ttl": 60,
-            "type": "CNAME",
-            "weighted_routing_policy": [],
-            "zone_id": "Z00048744ZWVWIUZ7P1"
-          },
-          "sensitive_attributes": [],
-          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
-          "dependencies": [
-            "aws_acm_certificate.cert",
-            "aws_route53_zone.website_zone"
-          ]
         }
       ]
     },
@@ -405,10 +299,8 @@
           "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
           "dependencies": [
             "aws_acm_certificate.cert",
-            "aws_acm_certificate_validation.cert_validation",
             "aws_cloudfront_distribution.website_cf",
             "aws_cloudfront_origin_access_control.oac",
-            "aws_route53_record.cert_validation",
             "aws_route53_zone.website_zone",
             "aws_s3_bucket.website_bucket"
           ]
@@ -554,11 +446,8 @@
           "private": "bnVsbA==",
           "dependencies": [
             "aws_acm_certificate.cert",
-            "aws_acm_certificate_validation.cert_validation",
             "aws_cloudfront_distribution.website_cf",
             "aws_cloudfront_origin_access_control.oac",
-            "aws_route53_record.cert_validation",
-            "aws_route53_zone.website_zone",
             "aws_s3_bucket.website_bucket"
           ]
         }

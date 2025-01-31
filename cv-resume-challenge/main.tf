@@ -31,6 +31,47 @@ resource "aws_s3_bucket_website_configuration" "website_config" {
   }
 }
 
+# Create an ACM certificate for HTTPS support
+resource "aws_acm_certificate" "cert" {
+  # Create an ACM certificate for HTTPS support in us-east-1 (required for CloudFront)
+  provider          = aws.us-east-1
+  domain_name       = "*.${var.domain_name}"
+  subject_alternative_names  = [var.domain_name]
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tags = {
+    Name        = "Resume website"
+    Environment = "Dev"
+  }
+}
+
+resource "aws_route53_record" "cert_validation" {
+  for_each = {
+    for dvo in aws_acm_certificate.cert.domain_validation_options : dvo.domain_name => {
+      name  = dvo.resource_record_name
+      type  = dvo.resource_record_type
+      record = dvo.resource_record_value
+    }
+  }
+
+  allow_overwrite = true
+  zone_id = aws_route53_zone.website_zone.zone_id
+  name    = each.value.name
+  type    = each.value.type
+  records = [each.value.record]
+  ttl     = 60
+}
+
+resource "aws_acm_certificate_validation" "cert_validation" {
+  provider                = aws.us-east-1
+  certificate_arn         = aws_acm_certificate.cert.arn
+  validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
+}
+
 # Create an Origin Access Control (OAC) for CloudFront to securely access S3 bucket
 resource "aws_cloudfront_origin_access_control" "oac" {
   name                              = "website-oac"
@@ -42,6 +83,8 @@ resource "aws_cloudfront_origin_access_control" "oac" {
 
 # Create a CloudFront distribution for the website
 resource "aws_cloudfront_distribution" "website_cf" {
+  #depends_on = [aws_acm_certificate_validation.cert_validation]
+
   origin {
     domain_name = aws_s3_bucket.website_bucket.bucket_regional_domain_name
     origin_id   = aws_s3_bucket.website_bucket.id
@@ -51,6 +94,8 @@ resource "aws_cloudfront_distribution" "website_cf" {
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"
+
+  aliases = [var.domain_name, "resume.${var.domain_name}"]
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
@@ -64,7 +109,9 @@ resource "aws_cloudfront_distribution" "website_cf" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn      = aws_acm_certificate_validation.cert_validation.certificate_arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
   }
 
   restrictions {

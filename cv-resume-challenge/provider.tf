@@ -7,8 +7,18 @@ provider "aws" {
 }
 
 # Additional provider configuration for west coast region; resources can
-# reference this as `aws.us_west`.
+# reference this as `aws.us-west-2`.
 provider "aws" {
-  alias  = "us_west"
+  alias  = "us-west-2"
   region = "us-west-2"
+  shared_credentials_files = ["~/.aws/credentials"]
+  profile = "terraform"
+}
+
+# Create an ACM certificate for HTTPS support in us-east-1 (required for CloudFront)
+provider "aws" {
+  alias  = "us-east-1"
+  region = "us-east-1"
+  shared_credentials_files = ["~/.aws/credentials"]
+  profile = "terraform"
 }

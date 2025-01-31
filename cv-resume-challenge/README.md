@@ -55,3 +55,19 @@ Now if we test access from s3 endpoint we should get 403. We can only access thr
 
 You can either use Route53 or another domain registrar to buy a new domain. In this case I have used namecheap to register domain ahussein.pro for about $4 for first year.
 Next is to create Route53 hosted zone with the same domain name and then add a record of type A (Alias) which points the domain name to our cloudfront domain name. Once this is done we need to get the route53 name servers for our hosted zone and update those in our namecheap DNS service.
+
+### Update Cloudfront alias domain
+We need to update settings for CF aliases to point to the custom domain name (and any other alternatives ex. resume.mydomain.com).
+To enable HTTPS from viewers, we can request public certificate from ACM. 
+
+**Important notes:**
+1. The certicate need to be requested in us-east-1 region as per [aws docs]([https://](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cnames-and-https-requirements.html#https-requirements-aws-region))
+2. Certificate DNS validation. CNAME records need to be added to Route53 and then wait for validatoin. This can be done automatically by terraform
+3. The certificate must cover the alternate domain name in the SAN field of the certificate. " This means the SAN field must contain an exact match for the alternate domain name, or contain a wildcard at the same level of the alternate domain name that you’re adding."
+4. we also need to add Route53 record for the subdomain. Besides, we add AAAA records for IPv6 if enabled in cloudfront.
+
+*Question:* First terraform apply created the ACM certificate in eu-west-2 region. After changing the region (using new provider alias for that region), and running terraform apply the new ACM certificate is created in the new region, but old one still exists. How can it be deleted from terraform?
+
+When everything is setup correctly, we should be able to access our website from both root domain and the subdomain below (browser will redirect to https).
+https://ahussein.pro/
+https://resume.ahussein.pro/
