@@ -71,3 +71,11 @@ To enable HTTPS from viewers, we can request public certificate from ACM.
 When everything is setup correctly, we should be able to access our website from both root domain and the subdomain below (browser will redirect to https).
 https://ahussein.pro/
 https://resume.ahussein.pro/
+
+## Upload website template:
+
+Find suitable [template]([https://](https://startbootstrap.com/theme/resume)) and update site content.
+The whole template can be uploaded to s3 bucket with command:
+
+`aws-vault exec terraform -- aws s3 cp .\website\ s3://ahussein-resume.com/ --recursive`
+
