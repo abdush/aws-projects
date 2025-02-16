@@ -46,7 +46,13 @@ output "function_name" {
 
 
 # API gateway
-#output "visitor_api_url" {
-#  description = "API Gateway URL for visitor counter"
-#  value       = aws_apigatewayv2_api.visitor_api.api_endpoint
-#}
+output "visitor_api_url" {
+  description = "API Gateway URL for visitor counter"
+  value       = aws_apigatewayv2_api.visitor_api.api_endpoint
+}
+
+output "visitor_stage_url" {
+  description = "Base URL for visitor counter API Gateway stage."
+  value       = aws_apigatewayv2_stage.visitor_default.invoke_url
+}
+

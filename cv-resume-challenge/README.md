@@ -93,3 +93,23 @@ Invoke lambda from CLI:
 cat .\response.json
 {"statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "{\"count\": 1234}"}
 `
+
+Todo: log groups (cloudwatch) for lambda and API gateway
+
+## API Gateway
+configuration defines 5 API Gateway resources:
+
+1. api resource: defines a name for the API Gateway and sets its protocol to HTTP.
+2. stage: sets up application stages for the API Gateway - such as "Test", "Staging", and "Production". access logging can be enabled here.
+3. integration: configures the API Gateway to use your Lambda function.
+4. route: maps an HTTP request (GET /visitor-count) to a target, in this case your Lambda function intergration.
+5. lambda permission: gives API Gateway permission to invoke your Lambda function.
+
+The API Gateway stage will publish your API to a URL managed by AWS which is captured in TF output (stage base url).
+
+`curl "$(terraform output -raw visitor_stage_url)/visitor-count"
+{"count": 1234}
+
+ curl "$(terraform output -raw visitor_api_url)/visitor-count"  
+{"message":"Not Found"}
+`

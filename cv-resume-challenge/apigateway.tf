@@ -31,3 +31,35 @@ resource "aws_lambda_function" "visitor_lambda" {
 
   source_code_hash = data.archive_file.lambda.output_base64sha256
 }
+
+# API Gateway
+resource "aws_apigatewayv2_api" "visitor_api" {
+  name          = "VisitorAPI"
+  protocol_type = "HTTP"
+}
+
+resource "aws_apigatewayv2_stage" "visitor_default" {
+  api_id      = aws_apigatewayv2_api.visitor_api.id
+  name        = "dev"
+  auto_deploy = true
+}
+
+resource "aws_apigatewayv2_integration" "lambda_integration" {
+  api_id           = aws_apigatewayv2_api.visitor_api.id
+  integration_type = "AWS_PROXY"
+  integration_uri  = aws_lambda_function.visitor_lambda.invoke_arn
+}
+
+resource "aws_apigatewayv2_route" "visitor_route" {
+  api_id    = aws_apigatewayv2_api.visitor_api.id
+  route_key = "GET /visitor-count"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
+}
+
+resource "aws_lambda_permission" "apigw_lambda" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.visitor_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.visitor_api.execution_arn}/*/*"
+}
