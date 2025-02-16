@@ -37,3 +37,16 @@ output "route53_nameservers" {
   description = "Route 53 nameservers for your domain"
   value       = aws_route53_zone.website_zone.name_servers
 }
+
+# Lambda
+output "function_name" {
+  description = "Name of the Lambda function."
+  value = aws_lambda_function.visitor_lambda.function_name
+}
+
+
+# API gateway
+#output "visitor_api_url" {
+#  description = "API Gateway URL for visitor counter"
+#  value       = aws_apigatewayv2_api.visitor_api.api_endpoint
+#}

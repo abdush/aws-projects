@@ -79,3 +79,17 @@ The whole template can be uploaded to s3 bucket with command:
 
 `aws-vault exec terraform -- aws s3 cp .\website\ s3://ahussein-resume.com/ --recursive`
 
+
+## Lambda function
+create the python source file for the lambda function and define a data zip archive resource in TF which will create the zip payload for the lambda. Define iam assume role policy and iam role and assign to the lambda function resource defined in TF. Other configuration includes the filename, functionname, runtime, handler (entrypoint).
+
+Invoke lambda from CLI:
+`aws-vault exec terraform -- aws lambda invoke --function-name=$(terraform output -raw function_name) response.json
+{
+    "StatusCode": 200,
+    "ExecutedVersion": "$LATEST"
+}
+
+cat .\response.json
+{"statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "{\"count\": 1234}"}
+`
