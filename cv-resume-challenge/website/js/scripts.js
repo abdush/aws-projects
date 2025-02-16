@@ -32,3 +32,17 @@ window.addEventListener('DOMContentLoaded', event => {
     });
 
 });
+
+
+async function fetchVisitorCount() {
+    try {
+        const response = await fetch("https://your-api-gateway-url.execute-api.us-east-1.amazonaws.com/prod/visitor-count");
+        const data = await response.json();
+        document.getElementById("visitor-count").textContent = data.count;
+    } catch (error) {
+        console.error("Error fetching visitor count:", error);
+        document.getElementById("visitor-count").textContent = "...";
+    }
+}
+
+fetchVisitorCount();

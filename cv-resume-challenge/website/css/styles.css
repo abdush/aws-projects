@@ -10970,3 +10970,8 @@ section.resume-section .resume-section-content {
     padding-bottom: 5rem;
   }
 }
+
+.visitor-counter {
+  color: black;
+  font-size: small;
+}
