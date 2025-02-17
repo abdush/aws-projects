@@ -113,3 +113,56 @@ The API Gateway stage will publish your API to a URL managed by AWS which is cap
  curl "$(terraform output -raw visitor_api_url)/visitor-count"  
 {"message":"Not Found"}
 `
+
+## Javascript API call
+add AJAX call to the API gateway and add html element to display the visitor counter.
+remember to upload the changed files to s3 bucket.
+
+`aws-vault exec terraform -- aws s3 cp .\website\ s3://ahussein-resume.com/ --recursive`
+
+### CORS issue:
+If you try to access API from website, you will get CORS error
+`
+Access to fetch at 'https://rbj9x7ls55.execute-api.eu-west-2.amazonaws.com/dev/visitor-count' from origin 'null' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
+`
+
+We need to configure CORS in our API gateway. With the new HTTP API Gateway v2, we don't need to define CORS response headers in the lambda respone, the API config is all what is needed. Configure allow_origins from our custom domain and allow_methods for GET
+
+test call
+
+`
+curl -v -X GET "$(terraform output -raw visitor_stage_url)/visitor-count"  -H 'Origin:https://resume.ahussein.pro' -H 'Access-Control-Request-Method: GET'
+Note: Unnecessary use of -X or --request, GET is already inferred.
+* Uses proxy env variable no_proxy == '192.168.99.100'
+* Host rbj9x7ls55.execute-api.eu-west-2.amazonaws.com:443 was resolved.
+* IPv6: (none)
+* IPv4: 3.11.59.99, 18.130.27.41
+*   Trying 3.11.59.99:443...
+* schannel: disabled automatic use of client certificate
+* ALPN: curl offers http/1.1
+* ALPN: server accepted http/1.1
+* Connected to rbj9x7ls55.execute-api.eu-west-2.amazonaws.com (3.11.59.99) port 443
+* using HTTP/1.x
+> GET /dev/visitor-count HTTP/1.1
+> Host: rbj9x7ls55.execute-api.eu-west-2.amazonaws.com
+> User-Agent: curl/8.10.1
+> Accept: */*
+> Origin:https://resume.ahussein.pro
+> Access-Control-Request-Method: GET
+>
+* schannel: remote party requests renegotiation
+* schannel: renegotiating SSL/TLS connection
+* schannel: SSL/TLS connection renegotiated
+* Request completely sent off
+< HTTP/1.1 200 OK
+< Date: Mon, 17 Feb 2025 22:47:37 GMT
+< Content-Type: application/json
+< Content-Length: 15
+< Connection: keep-alive
+< access-control-allow-origin: https://resume.ahussein.pro
+< Apigw-Requestid: GJplficCrPEEP0Q=
+<
+{"count": 1234}* Connection #0 to host rbj9x7ls55.execute-api.eu-west-2.amazonaws.com left intact
+`
+
+Now access from website should work!

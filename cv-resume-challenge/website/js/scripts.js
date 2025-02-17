@@ -36,7 +36,7 @@ window.addEventListener('DOMContentLoaded', event => {
 
 async function fetchVisitorCount() {
     try {
-        const response = await fetch("https://your-api-gateway-url.execute-api.us-east-1.amazonaws.com/prod/visitor-count");
+        const response = await fetch("https://rbj9x7ls55.execute-api.eu-west-2.amazonaws.com/dev/visitor-count");
         const data = await response.json();
         document.getElementById("visitor-count").textContent = data.count;
     } catch (error) {
@@ -45,4 +45,5 @@ async function fetchVisitorCount() {
     }
 }
 
-fetchVisitorCount();
+// Fetch visitor count on page load
+window.onload = fetchVisitorCount;

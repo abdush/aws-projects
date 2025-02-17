@@ -36,6 +36,12 @@ resource "aws_lambda_function" "visitor_lambda" {
 resource "aws_apigatewayv2_api" "visitor_api" {
   name          = "VisitorAPI"
   protocol_type = "HTTP"
+
+  cors_configuration {
+    allow_origins = ["https://resume.ahussein.pro"]  # OR use ["*"] for testing
+    allow_methods = ["GET"]
+    allow_headers = ["*"]
+  }
 }
 
 resource "aws_apigatewayv2_stage" "visitor_default" {
