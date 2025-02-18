@@ -166,3 +166,13 @@ Note: Unnecessary use of -X or --request, GET is already inferred.
 `
 
 Now access from website should work!
+
+## DynamoDB
+define resource for table with has key (id) and type as string. No need to define the count column in table definition. It can be automatically added from lambda function (Number type auto inferred). For cost-efficiency, use pay-per-request (on-demand) pricing.
+Update lambda function to fetch from table using unique key (id) column. Increment counter & update into db. 
+Now the lambda function need to get permission to read/write from/to dynamodb. This is done using iam role (assume role) with attached policy which has Get/Update/Put Item actions on our table.
+
+## lambda 500 error
+
+`TypeError: Object of type Decimal is not JSON serializable`
+[solution]([https://](https://repost.aws/articles/ARRJPOEgrUSIuLebbcoETaAg/how-to-use-the-python-json-module-when-decoding-dynamodb-items)) here is to use default=int for json dumps method for the response
